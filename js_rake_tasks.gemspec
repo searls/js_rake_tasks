@@ -13,5 +13,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.6.2}
   s.summary = %q{Provides a few tasks for managing CoffeeScript/JavaScript projects}
 
+  s.add_dependency 'json_pure', '~> 1.6.1'
+  s.add_dependency 'semver', '~> 1.0.1'
+  s.add_dependency 'git', '~> 1.2.5'
 end
 
