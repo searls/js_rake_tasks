@@ -1,8 +1,9 @@
 include Rake::DSL if defined?(Rake::DSL)
 
 namespace 'coffee' do
-  task "compile" do
-    `coffee --compile --output dist/ src/`
+  task "compile", [:flags] do |t,args|
+    package_json = JSON.parse(File.read("package.json"))
+    `coffee --compile -j #{package_json["name"]} #{args[:flags]} --output dist/ src/`
   end
 end
 
