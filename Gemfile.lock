@@ -1,12 +1,18 @@
 PATH
   remote: .
   specs:
-    js_rake_tasks (0.0.1)
+    js_rake_tasks (0.0.2)
+      git (~> 1.2.5)
+      json_pure (~> 1.6.1)
+      semver (~> 1.0.1)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    git (1.2.5)
+    json_pure (1.6.5)
     rake (0.9.2.2)
+    semver (1.0.1)
 
 PLATFORMS
   ruby
