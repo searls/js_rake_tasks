@@ -4,7 +4,7 @@ namespace 'coffee' do
   task "compile", [:flags] do |t,args|
     require 'json'
 
-    source_code = FileList.new('src/**/*.coffee').map { |file_path| File.read(file_path) }.join("\n")
+    source_code = FileList.new('src/**/*.coffee').sort.map { |file_path| File.read(file_path) }.join("\n")
 
     package_json = JSON.parse(File.read("package.json"))
     uncompressed_output = filter_output(compile_coffee_script(source_code), package_json)
