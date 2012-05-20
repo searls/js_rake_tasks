@@ -3,15 +3,13 @@ include Rake::DSL if defined?(Rake::DSL)
 namespace 'coffee' do
   task "compile", [:flags] do |t,args|
     require 'json'
-    require 'execjs'
-    require 'coffee-script'
 
     source_code = FileList.new('src/**/*.coffee').map { |file_path| File.read(file_path) }.join("\n")
 
     package_json = JSON.parse(File.read("package.json"))
     uncompressed_output = filter_output(compile_coffee_script(source_code), package_json)
     File.open(file_name(package_json), "w") { |file| file.puts uncompressed_output }
-    File.open(file_name(package_json, true), "w") { |file| file.puts uncompressed_output }
+    File.open(file_name(package_json, true), "w") { |file| file.puts uglify(uncompressed_output) }
   end
 
   def file_name(package_json, minified = false)
@@ -19,6 +17,9 @@ namespace 'coffee' do
   end
 
   def compile_coffee_script(coffee_script)
+    require 'execjs'
+    require 'coffee-script'
+
     context = ExecJS.compile(File.read(CoffeeScript::Source.bundled_path))
     context.call("CoffeeScript.compile", coffee_script, :bare => false)
   end
@@ -28,7 +29,8 @@ namespace 'coffee' do
   end
 
   def uglify(uncompressed_javascript)
-
+    require 'uglifier'
+    Uglifier.compile(uncompressed_javascript)
   end
 end
 
