@@ -14,7 +14,10 @@ Gem::Specification.new do |s|
   s.summary = %q{Provides a few tasks for managing CoffeeScript/JavaScript projects}
 
   s.add_dependency 'json_pure', '~> 1.6.1'
+  s.add_dependency 'execjs', '~> 1.3.2'
   s.add_dependency 'semver', '~> 1.0.1'
   s.add_dependency 'git', '~> 1.2.5'
+
+  s.add_dependency 'coffee-script-source', '~> 1.3.3'
 end
 

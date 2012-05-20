@@ -2,14 +2,33 @@ include Rake::DSL if defined?(Rake::DSL)
 
 namespace 'coffee' do
   task "compile", [:flags] do |t,args|
+    require 'json'
+    require 'execjs'
+    require 'coffee-script'
+
+    source_code = FileList.new('src/**/*.coffee').map { |file_path| File.read(file_path) }.join("\n")
+
     package_json = JSON.parse(File.read("package.json"))
+    uncompressed_output = filter_output(compile_coffee_script(source_code), package_json)
+    File.open(file_name(package_json), "w") { |file| file.puts uncompressed_output }
+    File.open(file_name(package_json, true), "w") { |file| file.puts uncompressed_output }
+  end
 
-    `coffee --compile -j #{package_json["name"]} #{args[:flags]} --output dist/ src/`
+  def file_name(package_json, minified = false)
+    File.join("dist","#{package_json["name"]}#{minified ? "-min" : ""}.js")
+  end
 
-    #swap out the version
-    file_name = File.join("dist","#{package_json["name"]}.js")
-    filtered = File.read(file_name).gsub(/@@VERSION@@/, package_json["version"])
-    File.open(file_name, "w") {|file| file.puts filtered}
+  def compile_coffee_script(coffee_script)
+    context = ExecJS.compile(File.read(CoffeeScript::Source.bundled_path))
+    context.call("CoffeeScript.compile", coffee_script, :bare => false)
+  end
+
+  def filter_output(compiled_output, package_json)
+    compiled_output.gsub(/@@VERSION@@/, package_json["version"])
+  end
+
+  def uglify(uncompressed_javascript)
+
   end
 end
 
